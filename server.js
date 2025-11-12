@@ -39,6 +39,10 @@ app.post("/login", async (req, res) => {
   res.json({ success: true, token });
 });
 
+app.get("/", (req, res) => {
+  res.send("BeeBetter backend is running successfully");
+});
+
 app.listen(process.env.PORT || 5000, () =>
   console.log(`Server running on port ${process.env.PORT || 5000}`)
 );
