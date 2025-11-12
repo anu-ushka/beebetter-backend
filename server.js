@@ -3,21 +3,35 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
-dotenv.config();
-const app = express();
 
+dotenv.config();
+
+const app = express();
 app.use(cors());
 app.use(express.json());
-app.use("/api/auth", authRoutes);
+
+// Test route
 app.get("/", (req, res) => {
   res.send("BeeBetter backend is running successfully 🚀");
 });
 
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.log(err));
+// MongoDB connection
+const startServer = async () => {
+  try {
+    console.log("🚀 Attempting to connect to MongoDB...");
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("✅ MongoDB connected successfully!");
 
-const PORT = process.env.PORT || 5000;
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => {
+      console.log(`🎉 Server running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error("❌ Failed to connect to MongoDB:", err);
+  }
+};
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+startServer();
+
+// Auth routes
+app.use("/api/auth", authRoutes);
